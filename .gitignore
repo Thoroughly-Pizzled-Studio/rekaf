@@ -1,0 +1,25 @@
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+client_jenkins.conf
+secrets/
+credentials/
+
+# Runtime and temporary files
+*.log
+*.tmp
+*.swp
+*.swo
+*~
+tmp/
+.cache/
+
+# IDEs
+.idea/
+.vscode/
+
+# OS metadata
+.DS_Store
+Thumbs.db
+Desktop.ini
