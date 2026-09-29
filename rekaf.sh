@@ -125,11 +125,12 @@ COMMON_OPTIONS=(
 
 echo "Checking topic '$TOPIC'..."
 
-if "$KAFKA_BIN/kafka-topics.sh" \
-    "${COMMON_OPTIONS[@]}" \
-    --list |
-    grep -Fxq -- "$TOPIC"
-then
+# Capture the complete result before matching: a failed query is not absence.
+if ! topics=$("$KAFKA_BIN/kafka-topics.sh" "${COMMON_OPTIONS[@]}" --list); then
+  die "Failed to list topics"
+fi
+
+if grep -Fxq -- "$TOPIC" <<< "$topics"; then
   echo "OK: topic '$TOPIC' already exists"
 else
   echo "Creating topic '$TOPIC'..."
@@ -146,29 +147,38 @@ fi
 # ACL helper functions
 # --------------------------------------------------
 
-topic_acl_exists() {
+# Match the exact ACL that this script adds, not effective authorization.
+# Kafka prints entries as (principal=..., host=..., operation=..., permissionType=...).
+acl_exists() {
   local principal="$1"
   local operation="$2"
+  local resource_option="$3"
+  local resource_name="$4"
+  local output line
+  local expected="(principal=$principal, host=*, operation=$operation, permissionType=ALLOW)"
 
-  "$KAFKA_BIN/kafka-acls.sh" \
-    "${COMMON_OPTIONS[@]}" \
-    --list \
-    --topic "$TOPIC" 2>/dev/null |
-    grep -F "principal=$principal" |
-    grep -Fq "operation=$operation"
+  # Explicit handling is necessary because callers use this function in `if`.
+  if ! output=$("$KAFKA_BIN/kafka-acls.sh" \
+      "${COMMON_OPTIONS[@]}" \
+      --list --resource-pattern-type literal \
+      "$resource_option" "$resource_name"); then
+    die "Failed to list ACLs for $resource_option '$resource_name'"
+  fi
+
+  while IFS= read -r line; do
+    if [[ $line =~ ^[[:space:]]*"$expected"[[:space:]]*$ ]]; then
+      return 0
+    fi
+  done <<< "$output"
+  return 1
+}
+
+topic_acl_exists() {
+  acl_exists "$1" "$2" --topic "$TOPIC"
 }
 
 group_acl_exists() {
-  local principal="$1"
-  local operation="$2"
-  local group="$3"
-
-  "$KAFKA_BIN/kafka-acls.sh" \
-    "${COMMON_OPTIONS[@]}" \
-    --list \
-    --group "$group" 2>/dev/null |
-    grep -F "principal=$principal" |
-    grep -Fq "operation=$operation"
+  acl_exists "$1" "$2" --group "$3"
 }
 
 # --------------------------------------------------
@@ -196,7 +206,8 @@ if [[ -n "$CONSUMER" ]]; then
 
     "$KAFKA_BIN/kafka-acls.sh" \
       "${COMMON_OPTIONS[@]}" \
-      --add \
+      --add --resource-pattern-type literal \
+      --allow-host "*" \
       --allow-principal "$CONSUMER_PRINCIPAL" \
       --operation READ \
       --topic "$TOPIC"
@@ -211,7 +222,8 @@ if [[ -n "$CONSUMER" ]]; then
 
     "$KAFKA_BIN/kafka-acls.sh" \
       "${COMMON_OPTIONS[@]}" \
-      --add \
+      --add --resource-pattern-type literal \
+      --allow-host "*" \
       --allow-principal "$CONSUMER_PRINCIPAL" \
       --operation READ \
       --group "$CONS_GROUP"
@@ -246,7 +258,8 @@ if [[ -n "$PRODUCER" ]]; then
 
     "$KAFKA_BIN/kafka-acls.sh" \
       "${COMMON_OPTIONS[@]}" \
-      --add \
+      --add --resource-pattern-type literal \
+      --allow-host "*" \
       --allow-principal "$PRODUCER_PRINCIPAL" \
       --operation WRITE \
       --topic "$TOPIC"

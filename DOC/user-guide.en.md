@@ -59,7 +59,7 @@ Producer and consumer:
 
 ## Output and repeated runs
 
-The script prints each check and change. If its checks find an existing topic or ACL, creation is skipped. Argument and prerequisite errors exit with a nonzero status. A failed topic creation or ACL addition also stops execution. A failed existence check may be treated as a missing resource and lead to a creation attempt.
+The script prints each check and change. If its checks find an existing topic or ACL, creation is skipped. Argument and prerequisite errors exit with a nonzero status. A failed topic creation or ACL addition also stops execution. A failed existence query stops execution with a nonzero status; it is never treated as a missing resource. Kafka diagnostics remain visible on stderr.
 
 ## Environment configuration
 
@@ -76,9 +76,9 @@ Edit these values in the script for a different environment. There are currently
 ## Limitations
 
 - Kafka paths, the bootstrap server, and the configuration path are hard-coded.
-- ACL checks parse text output from `kafka-acls.sh` using `grep`; output format changes may require adjustments.
-- Checks match principal and operation as substrings, without separately validating permission type or host. A match does not guarantee a suitable allow ACL.
-- Resource-listing failures may be treated as a missing topic or ACL; ACL-listing error messages are suppressed.
+- ACL checks match complete entry lines from the text output of `kafka-acls.sh`; output format changes may require adjustments.
+- Checks require the exact principal and operation, `permissionType=ALLOW`, and `host=*` on the requested literal resource. Other hosts, wildcard principals, broader operations, and prefixed resource patterns are not treated as the same entry. This is not an effective-authorization check: existing DENY rules can still block access.
+- A failed resource-listing command stops execution with a nonzero status and preserves Kafka diagnostics. Earlier successful changes are not rolled back.
 - The script only adds permissions and does not remove extra ACLs.
 - Topics are created without explicit `--partitions` or `--replication-factor`, using broker defaults.
 
