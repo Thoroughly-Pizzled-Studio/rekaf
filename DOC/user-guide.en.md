@@ -16,7 +16,7 @@
 ## Installation
 
 ```bash
-git clone https://github.com/Eksterulo/rekaf.git
+git clone https://github.com/Thoroughly-Pizzled-Studio/rekaf.git
 cd rekaf
 chmod +x rekaf.sh
 ```
