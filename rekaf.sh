@@ -4,7 +4,7 @@ set -euo pipefail
 
 KAFKA_BIN="/opt/kafka/bin"
 BOOTSTRAP_SERVER="localhost:9092"
-CONFIG="/opt/kafka/config/client_jenkins.conf"
+CONFIG="/opt/kafka/config/client.conf"
 
 TOPIC=""
 PRODUCER=""
@@ -227,7 +227,7 @@ fi
 #   WRITE topic
 #
 # CREATE intentionally NOT granted.
-# Topic is created above by Jenkins/admin.
+# Topic is created above using administrative credentials.
 # --------------------------------------------------
 
 if [[ -n "$PRODUCER" ]]; then

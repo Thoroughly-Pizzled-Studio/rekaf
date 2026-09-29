@@ -2,7 +2,7 @@
 .env
 .env.*
 !.env.example
-client_jenkins.conf
+client.conf
 secrets/
 credentials/
 
