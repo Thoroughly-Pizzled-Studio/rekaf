@@ -207,7 +207,7 @@ if [[ -n "$CONSUMER" ]]; then
     "$KAFKA_BIN/kafka-acls.sh" \
       "${COMMON_OPTIONS[@]}" \
       --add --resource-pattern-type literal \
-      --allow-hosts "*" \
+      --allow-host "*" \
       --allow-principal "$CONSUMER_PRINCIPAL" \
       --operation READ \
       --topic "$TOPIC"
@@ -223,7 +223,7 @@ if [[ -n "$CONSUMER" ]]; then
     "$KAFKA_BIN/kafka-acls.sh" \
       "${COMMON_OPTIONS[@]}" \
       --add --resource-pattern-type literal \
-      --allow-hosts "*" \
+      --allow-host "*" \
       --allow-principal "$CONSUMER_PRINCIPAL" \
       --operation READ \
       --group "$CONS_GROUP"
@@ -259,7 +259,7 @@ if [[ -n "$PRODUCER" ]]; then
     "$KAFKA_BIN/kafka-acls.sh" \
       "${COMMON_OPTIONS[@]}" \
       --add --resource-pattern-type literal \
-      --allow-hosts "*" \
+      --allow-host "*" \
       --allow-principal "$PRODUCER_PRINCIPAL" \
       --operation WRITE \
       --topic "$TOPIC"
