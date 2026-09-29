@@ -9,7 +9,7 @@
   - `/opt/kafka/bin/kafka-topics.sh`;
   - `/opt/kafka/bin/kafka-acls.sh`.
 - Kafka available at `localhost:9092`.
-- Client configuration at `/opt/kafka/config/client_jenkins.conf`.
+- Client configuration at `/opt/kafka/config/client.conf`.
 - Configuration credentials that can list and create topics, and list and modify ACLs.
 - The `grep` utility.
 
@@ -68,10 +68,10 @@ The following values are set at the beginning of `rekaf.sh`:
 ```bash
 KAFKA_BIN="/opt/kafka/bin"
 BOOTSTRAP_SERVER="localhost:9092"
-CONFIG="/opt/kafka/config/client_jenkins.conf"
+CONFIG="/opt/kafka/config/client.conf"
 ```
 
-Edit these values in the script for a different environment. There are currently no command-line or environment-variable overrides. The filename `client_jenkins.conf` is the current client configuration path; the script runs as an ordinary terminal command.
+Edit these values in the script for a different environment. There are currently no command-line or environment-variable overrides. The filename `client.conf` is the current client configuration path; the script runs as an ordinary terminal command.
 
 ## Limitations
 
