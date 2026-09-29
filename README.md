@@ -14,3 +14,7 @@ Consumers receive topic and group `READ` permissions; producers receive topic `W
 | --- | --- | --- |
 | User guide | [English](DOC/user-guide.en.md) | [Русский](DOC/user-guide.ru.md) |
 | Developer guide | [English](DOC/developer-guide.en.md) | [Русский](DOC/developer-guide.ru.md) |
+
+## License
+
+[MIT License](LICENSE) — Copyright (c) 2026 Nikodem Zima.

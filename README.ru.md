@@ -14,3 +14,7 @@ rekaf — Bash-скрипт, который при необходимости с
 | --- | --- | --- |
 | Документация пользователя | [Русский](DOC/user-guide.ru.md) | [English](DOC/user-guide.en.md) |
 | Документация разработчика | [Русский](DOC/developer-guide.ru.md) | [English](DOC/developer-guide.en.md) |
+
+## Лицензия
+
+[Лицензия MIT](LICENSE) — Copyright (c) 2026 Nikodem Zima.
