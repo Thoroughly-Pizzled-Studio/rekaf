@@ -39,7 +39,7 @@ else:
         state["topics"].append(args[args.index("--topic") + 1])
     else:
         assert args[args.index("--resource-pattern-type") + 1] == "literal"
-        assert args[args.index("--allow-hosts") + 1] == "*"
+        assert args[args.index("--allow-host") + 1] == "*"
         principal = args[args.index("--allow-principal") + 1]
         operation = args[args.index("--operation") + 1]
         state[kind].append(f"\t(principal={principal}, host=*, operation={operation}, permissionType=ALLOW)")
